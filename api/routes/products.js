@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+const checkAuth = require('../middleware/checkAuth');
 const Product = require("../models/product");
 
 router.get("/", (req, res, next) => {
@@ -22,9 +23,13 @@ router.get("/", (req, res, next) => {
           };
         })
       };
-      
+      //   if (docs.length >= 0) {
       res.status(200).json(response);
-      
+      //   } else {
+      //       res.status(404).json({
+      //           message: 'No entries found'
+      //       });
+      //   }
     })
     .catch(err => {
       console.log(err);
@@ -34,7 +39,7 @@ router.get("/", (req, res, next) => {
     });
 });
 
-router.post("/",(req, res, next) => {
+router.post("/", checkAuth,(req, res, next) => {
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
